@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts'
 
 const statsData = {
   totalCount: 1540,
@@ -18,17 +18,22 @@ const recentThreats = {
   weeklyCount: 105,
 }
 
-const dailyData = [
-  { name: '월', count: 12 },
-  { name: '화', count: 8 },
-  { name: '수', count: 24 },
-  { name: '목', count: 15 },
-  { name: '금', count: 31 },
-  { name: '토', count: 6 },
-  { name: '일', count: 9 },
-]
-
 const COLORS = ['#ff4d4f', '#fa8c16', '#1890ff', '#52c41a']
+
+// 최근 7일 날짜 자동 생성
+const getLast7Days = () => {
+  const days = []
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date()
+    d.setDate(d.getDate() - i)
+    days.push({
+      name: `${d.getMonth()+1}/${d.getDate()}`,
+      day: ['일','월','화','수','목','금','토'][d.getDay()],
+      count: [12, 8, 24, 15, 31, 6, 9][6-i]
+    })
+  }
+  return days
+}
 
 function Dashboard() {
   const [currentTime, setCurrentTime] = useState(new Date())
@@ -37,6 +42,8 @@ function Dashboard() {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
     return () => clearInterval(timer)
   }, [])
+
+  const dailyData = getLast7Days()
 
   return (
     <div>
@@ -56,7 +63,7 @@ function Dashboard() {
         <span style={{
           background: '#ff4d4f', borderRadius: '50%',
           width: '10px', height: '10px', display: 'inline-block',
-          boxShadow: '0 0 6px #ff4d4f', animation: 'pulse 1.5s infinite',
+          boxShadow: '0 0 6px #ff4d4f',
         }} />
         <span style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 'bold' }}>실시간 탐지 현황</span>
         <span style={{ color: '#8b949e', fontSize: '13px' }}>최근 1시간 기준</span>
@@ -102,37 +109,65 @@ function Dashboard() {
 
       {/* 차트 */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        {/* 일별 유출 건수 */}
         <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '12px', padding: '24px' }}>
-          <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>📈 일별 유출 건수</h3>
+          <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>📈 일별 유출 건수 (최근 7일)</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={dailyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#30363d" />
-              <XAxis dataKey="name" stroke="#8b949e" />
+              <XAxis dataKey="name" stroke="#8b949e" tick={({ x, y, payload }) => (
+                <g transform={`translate(${x},${y})`}>
+                  <text x={0} y={0} dy={12} textAnchor="middle" fill="#8b949e" fontSize={11}>{payload.value}</text>
+                  <text x={0} y={0} dy={26} textAnchor="middle" fill="#58a6ff" fontSize={10}>
+                    {dailyData.find(d => d.name === payload.value)?.day}
+                  </text>
+                </g>
+              )} height={40} />
               <YAxis stroke="#8b949e" />
-              <Tooltip contentStyle={{ background: '#21262d', border: '1px solid #30363d' }} />
+              <Tooltip
+                contentStyle={{ background: '#21262d', border: '1px solid #30363d' }}
+                formatter={(value) => [`${value}건`, '탐지 건수']}
+                labelFormatter={(label) => {
+                  const d = dailyData.find(d => d.name === label)
+                  return `${label} (${d?.day})`
+                }}
+              />
               <Bar dataKey="count" fill="#1f6feb" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
+        {/* 사이트별 비중 */}
         <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '12px', padding: '24px' }}>
           <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>🌐 사이트별 비중</h3>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
                 data={statsData.siteStats}
-                cx="50%" cy="50%"
-                outerRadius={90}
+                cx="50%" cy="45%"
+                outerRadius={80}
                 dataKey="count"
                 nameKey="sourceName"
-                label={({sourceName, ratio}) => `${sourceName} ${ratio}%`}
               >
                 {statsData.siteStats.map((_, index) => (
                   <Cell key={index} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
+              <Legend
+                formatter={(value, entry) => (
+                  <span style={{ color: '#e6edf3', fontSize: '12px' }}>
+                    {entry.payload.sourceName} ({entry.payload.ratio}%)
+                  </span>
+                )}
+                payload={statsData.siteStats.map((item, index) => ({
+                  value: item.sourceName,
+                  type: 'circle',
+                  color: COLORS[index],
+                  payload: item,
+                }))}
+              />
               <Tooltip
-                formatter={(value, name, props) => [`${value}건`, props.payload.sourceName]}
+                formatter={(value, name, props) => [`${value}건 (${props.payload.ratio}%)`, props.payload.sourceName]}
                 contentStyle={{ background: '#21262d', border: '1px solid #30363d' }}
               />
             </PieChart>
