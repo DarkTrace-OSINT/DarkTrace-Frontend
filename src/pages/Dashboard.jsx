@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 
 const statsData = {
@@ -30,12 +31,47 @@ const dailyData = [
 const COLORS = ['#ff4d4f', '#fa8c16', '#1890ff', '#52c41a']
 
 function Dashboard() {
+  const [currentTime, setCurrentTime] = useState(new Date())
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <div>
-      <h1 style={{ marginBottom: '24px', fontSize: '24px' }}>📊 통합 관제 대시보드</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px' }}>📊 통합 관제 대시보드</h1>
+        <span style={{ color: '#8b949e', fontSize: '13px' }}>
+          🕐 {currentTime.toLocaleString('ko-KR')}
+        </span>
+      </div>
 
-      {/* 상단 통계 카드 */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '32px' }}>
+      {/* 실시간 탐지 현황 (API 3) */}
+      <div style={{
+        background: '#161b22', border: '1px solid #1f6feb',
+        borderRadius: '12px', padding: '16px 20px', marginBottom: '24px',
+        display: 'flex', alignItems: 'center', gap: '12px',
+      }}>
+        <span style={{
+          background: '#ff4d4f', borderRadius: '50%',
+          width: '10px', height: '10px', display: 'inline-block',
+          boxShadow: '0 0 6px #ff4d4f', animation: 'pulse 1.5s infinite',
+        }} />
+        <span style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 'bold' }}>실시간 탐지 현황</span>
+        <span style={{ color: '#8b949e', fontSize: '13px' }}>최근 1시간 기준</span>
+        <span style={{ color: '#ff4d4f', fontSize: '24px', fontWeight: 'bold', marginLeft: '8px' }}>
+          {recentThreats.lastHourCount}건
+        </span>
+        <span style={{ color: '#8b949e', fontSize: '13px', marginLeft: 'auto' }}>
+          OPEN: <span style={{ color: '#fa8c16' }}>{recentThreats.openCount}</span>
+          &nbsp;&nbsp;
+          RESOLVED: <span style={{ color: '#52c41a' }}>{recentThreats.resolvedCount}</span>
+        </span>
+      </div>
+
+      {/* 통계 카드 (API 2) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
         {[
           { label: '최근 1시간 탐지', value: recentThreats.lastHourCount, color: '#ff4d4f' },
           { label: '이번 주 탐지', value: recentThreats.weeklyCount, color: '#fa8c16' },
@@ -52,7 +88,7 @@ function Dashboard() {
         ))}
       </div>
 
-      {/* 총 탐지 건수 */}
+      {/* 총 누적 탐지 건수 */}
       <div style={{
         background: '#161b22', border: '1px solid #30363d',
         borderRadius: '12px', padding: '20px', marginBottom: '24px',
