@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import StatusBadge from '../components/StatusBadge'
 
 const mockData = [
   { indicatorId: 1, indicatorValue: 'user1@gmail.com', indicatorType: 'EMAIL', sourceName: 'BreachForums', actionStatus: 'OPEN', parsedId: 101, date: '2026-03-17', leakTitle: 'Gmail 계정 대량 유출 2026' },
@@ -35,7 +36,6 @@ function ThreatSearch() {
     <div>
       <h1 style={{ marginBottom: '24px', fontSize: '24px' }}>🔍 위협 검색 및 대응</h1>
 
-      {/* 검색 필터 */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
         <input
           value={search}
@@ -76,14 +76,10 @@ function ThreatSearch() {
               <tr key={item.indicatorId} style={{ borderBottom: '1px solid #21262d' }}>
                 <td style={{ padding: '14px 16px', fontSize: '13px', color: '#58a6ff', maxWidth: '200px' }}>{item.leakTitle}</td>
                 <td style={{ padding: '14px 16px', fontSize: '14px' }}>{item.indicatorValue}</td>
-                <td style={{ padding: '14px 16px' }}>
-                  <span style={{ background: '#1f6feb22', color: '#58a6ff', padding: '4px 10px', borderRadius: '20px', fontSize: '12px' }}>{item.indicatorType}</span>
-                </td>
+                <td style={{ padding: '14px 16px' }}><StatusBadge status={item.indicatorType} /></td>
                 <td style={{ padding: '14px 16px', fontSize: '14px', color: '#8b949e' }}>{item.sourceName}</td>
                 <td style={{ padding: '14px 16px', fontSize: '14px', color: '#8b949e' }}>{item.date}</td>
-                <td style={{ padding: '14px 16px' }}>
-                  <span style={{ color: item.actionStatus === 'RESOLVED' ? '#52c41a' : '#fa8c16', fontSize: '13px', fontWeight: 'bold' }}>{item.actionStatus}</span>
-                </td>
+                <td style={{ padding: '14px 16px' }}><StatusBadge status={item.actionStatus} /></td>
                 <td style={{ padding: '14px 16px' }}>
                   {item.actionStatus === 'OPEN' && (
                     <button onClick={() => setModal(item)} style={{
@@ -101,7 +97,6 @@ function ThreatSearch() {
         </table>
       </div>
 
-      {/* 페이지네이션 */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '24px' }}>
         {[1, 2, 3, 4, 5].map(page => (
           <button key={page} style={{
@@ -112,7 +107,6 @@ function ThreatSearch() {
         ))}
       </div>
 
-      {/* 조치 메모 팝업 */}
       {modal && (
         <div style={{
           position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',

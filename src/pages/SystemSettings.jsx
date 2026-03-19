@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import StatusBadge from '../components/StatusBadge'
+import Toggle from '../components/Toggle'
+import Tag from '../components/Tag'
 
 const mockEngines = [
   { siteId: 1, sourceName: 'BreachForums', crawlerStatus: 'ALIVE', lastCrawledAt: '2026-03-18 15:30:00' },
@@ -23,7 +26,6 @@ function SystemSettings() {
   const [saved, setSaved] = useState(false)
 
   const handleSave = () => {
-    // PUT /api/v1/system/settings 연동 예정
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
@@ -33,10 +35,6 @@ function SystemSettings() {
       setKeywords(prev => [...prev, keyword.trim()])
       setKeyword('')
     }
-  }
-
-  const handleRemoveKeyword = (kw) => {
-    setKeywords(prev => prev.filter(k => k !== kw))
   }
 
   return (
@@ -54,14 +52,8 @@ function SystemSettings() {
               borderRadius: '8px', padding: '16px 24px',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <span style={{ fontSize: '10px', color: engine.crawlerStatus === 'ALIVE' ? '#52c41a' : '#ff4d4f' }}>●</span>
                 <span style={{ fontSize: '14px', fontWeight: 'bold' }}>{engine.sourceName}</span>
-                <span style={{
-                  fontSize: '12px',
-                  color: engine.crawlerStatus === 'ALIVE' ? '#52c41a' : '#ff4d4f',
-                  background: engine.crawlerStatus === 'ALIVE' ? '#52c41a22' : '#ff4d4f22',
-                  padding: '2px 8px', borderRadius: '10px',
-                }}>{engine.crawlerStatus}</span>
+                <StatusBadge status={engine.crawlerStatus} />
               </div>
               <div style={{ fontSize: '11px', color: '#8b949e' }}>마지막 수집: {engine.lastCrawledAt}</div>
             </div>
@@ -93,24 +85,7 @@ function SystemSettings() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <label style={{ fontSize: '13px', color: '#8b949e' }}>알림 활성화</label>
-            <div
-              onClick={() => setIsAlertActive(!isAlertActive)}
-              style={{
-                width: '48px', height: '26px', borderRadius: '13px',
-                background: isAlertActive ? '#52c41a' : '#30363d',
-                cursor: 'pointer', position: 'relative', transition: 'background 0.3s',
-              }}
-            >
-              <div style={{
-                width: '20px', height: '20px', borderRadius: '50%', background: '#fff',
-                position: 'absolute', top: '3px',
-                left: isAlertActive ? '25px' : '3px',
-                transition: 'left 0.3s',
-              }} />
-            </div>
-            <span style={{ fontSize: '13px', color: isAlertActive ? '#52c41a' : '#8b949e' }}>
-              {isAlertActive ? 'ON' : 'OFF'}
-            </span>
+            <Toggle value={isAlertActive} onChange={setIsAlertActive} />
           </div>
         </div>
       </div>
@@ -133,14 +108,7 @@ function SystemSettings() {
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
           {keywords.map(kw => (
-            <span key={kw} style={{
-              background: '#21262d', border: '1px solid #30363d',
-              padding: '6px 12px', borderRadius: '20px', fontSize: '13px',
-              display: 'flex', alignItems: 'center', gap: '6px',
-            }}>
-              {kw}
-              <span onClick={() => handleRemoveKeyword(kw)} style={{ cursor: 'pointer', color: '#ff4d4f' }}>×</span>
-            </span>
+            <Tag key={kw} label={kw} onRemove={(kw) => setKeywords(prev => prev.filter(k => k !== kw))} />
           ))}
         </div>
       </div>
