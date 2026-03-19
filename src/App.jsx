@@ -9,10 +9,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* 로그인 페이지 (사이드바 없음) */}
         <Route path="/login" element={<Login />} />
-
-        {/* 메인 페이지들 (사이드바 있음) */}
         <Route path="/*" element={
           <div className="app">
             <nav className="sidebar">
