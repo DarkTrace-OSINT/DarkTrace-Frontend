@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import StatusBadge from '../components/StatusBadge'
+import StatusBadge from '../../components/StatusBadge'
 
 const mockData = [
   { indicatorId: 1, indicatorValue: 'user1@gmail.com', indicatorType: 'EMAIL', sourceName: 'BreachForums', actionStatus: 'OPEN', parsedId: 101, detectedAt: '2026-03-17', leakTitle: 'Gmail 계정 대량 유출 2026' },

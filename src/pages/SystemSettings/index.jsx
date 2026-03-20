@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import StatusBadge from '../components/StatusBadge'
-import Toggle from '../components/Toggle'
-import Tag from '../components/Tag'
+import StatusBadge from '../../components/StatusBadge'
+import Toggle from '../../components/Toggle'
+import Tag from '../../components/Tag'
 
 const mockEngines = [
   { siteId: 1, sourceName: 'BreachForums', crawlerStatus: 'ALIVE', lastCrawledAt: '2026-03-18 15:30:00' },

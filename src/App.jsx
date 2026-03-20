@@ -4,7 +4,7 @@ import ThreatSearch from './pages/ThreatSearch'
 import SystemSettings from './pages/SystemSettings'
 import Login from './pages/Login'
 import logo from './assets/logo.png'
-import './App.css'
+import './styles/App.css'
 
 function App() {
   return (
