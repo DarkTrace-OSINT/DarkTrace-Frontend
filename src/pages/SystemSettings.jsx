@@ -39,11 +39,11 @@ function SystemSettings() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: '24px', fontSize: '24px' }}>⚙️ 시스템 설정</h1>
+      <h1 style={{ marginBottom: '24px', fontSize: '24px' }}>시스템 설정</h1>
 
       {/* 엔진 상태 (API 6) */}
       <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
-        <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>🖥️ 엔진 상태 모니터링</h3>
+        <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>엔진 상태 모니터링</h3>
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
           {mockEngines.map(engine => (
             <div key={engine.siteId} style={{
@@ -63,23 +63,25 @@ function SystemSettings() {
 
       {/* 텔레그램 설정 (API 7) */}
       <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
-        <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>📱 텔레그램 설정</h3>
+        <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>텔레그램 설정</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div>
             <label style={{ fontSize: '13px', color: '#8b949e', display: 'block', marginBottom: '6px' }}>Bot Token</label>
             <input
+              type="password"
               value={telegramBotToken}
               onChange={e => setTelegramBotToken(e.target.value)}
-              placeholder="8700467173:AAE..."
+              placeholder="텔레그램 Bot Token"
               style={{ width: '100%', padding: '10px 14px', background: '#0d1117', border: '1px solid #30363d', borderRadius: '8px', color: '#e6edf3', fontSize: '14px', outline: 'none' }}
             />
           </div>
           <div>
             <label style={{ fontSize: '13px', color: '#8b949e', display: 'block', marginBottom: '6px' }}>Chat ID</label>
             <input
+              type="password"
               value={telegramChatId}
               onChange={e => setTelegramChatId(e.target.value)}
-              placeholder="8411891432"
+              placeholder="텔레그램 Chat ID"
               style={{ width: '100%', padding: '10px 14px', background: '#0d1117', border: '1px solid #30363d', borderRadius: '8px', color: '#e6edf3', fontSize: '14px', outline: 'none' }}
             />
           </div>
@@ -92,7 +94,7 @@ function SystemSettings() {
 
       {/* 탐지 키워드 (API 7) */}
       <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
-        <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>🔑 탐지 키워드</h3>
+        <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>탐지 키워드</h3>
         <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
           <input
             value={keyword}
@@ -113,7 +115,6 @@ function SystemSettings() {
         </div>
       </div>
 
-      {/* 저장 버튼 */}
       <button onClick={handleSave} style={{
         background: saved ? '#52c41a' : '#1f6feb',
         color: '#fff', border: 'none',
@@ -121,7 +122,7 @@ function SystemSettings() {
         cursor: 'pointer', fontSize: '15px', fontWeight: 'bold',
         transition: 'background 0.3s',
       }}>
-        {saved ? '✅ 저장 완료!' : '💾 설정 저장'}
+        {saved ? '저장 완료!' : '설정 저장'}
       </button>
     </div>
   )

@@ -20,7 +20,6 @@ const recentThreats = {
 
 const COLORS = ['#ff4d4f', '#fa8c16', '#1890ff', '#52c41a']
 
-// 최근 7일 날짜 자동 생성
 const getLast7Days = () => {
   const days = []
   for (let i = 6; i >= 0; i--) {
@@ -48,13 +47,13 @@ function Dashboard() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '24px' }}>📊 통합 관제 대시보드</h1>
+        <h1 style={{ fontSize: '24px' }}>통합 관제 대시보드</h1>
         <span style={{ color: '#8b949e', fontSize: '13px' }}>
-          🕐 {currentTime.toLocaleString('ko-KR')}
+          {currentTime.toLocaleString('ko-KR')}
         </span>
       </div>
 
-      {/* 실시간 탐지 현황 (API 3) */}
+      {/* 실시간 탐지 현황 */}
       <div style={{
         background: '#161b22', border: '1px solid #1f6feb',
         borderRadius: '12px', padding: '16px 20px', marginBottom: '24px',
@@ -77,7 +76,7 @@ function Dashboard() {
         </span>
       </div>
 
-      {/* 통계 카드 (API 2) */}
+      {/* 통계 카드 */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
         {[
           { label: '최근 1시간 탐지', value: recentThreats.lastHourCount, color: '#ff4d4f' },
@@ -101,7 +100,7 @@ function Dashboard() {
         borderRadius: '12px', padding: '20px', marginBottom: '24px',
         display: 'flex', alignItems: 'center', gap: '16px',
       }}>
-        <span style={{ color: '#8b949e', fontSize: '14px' }}>📌 총 누적 탐지 건수</span>
+        <span style={{ color: '#8b949e', fontSize: '14px' }}>총 누적 탐지 건수</span>
         <span style={{ color: '#58a6ff', fontSize: '28px', fontWeight: 'bold' }}>
           {statsData.totalCount.toLocaleString()}건
         </span>
@@ -109,9 +108,8 @@ function Dashboard() {
 
       {/* 차트 */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-        {/* 일별 유출 건수 */}
         <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '12px', padding: '24px' }}>
-          <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>📈 일별 유출 건수 (최근 7일)</h3>
+          <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>일별 유출 건수 (최근 7일)</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={dailyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#30363d" />
@@ -137,9 +135,8 @@ function Dashboard() {
           </ResponsiveContainer>
         </div>
 
-        {/* 사이트별 비중 */}
         <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '12px', padding: '24px' }}>
-          <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>🌐 사이트별 비중</h3>
+          <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>사이트별 비중</h3>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie

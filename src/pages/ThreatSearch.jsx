@@ -2,11 +2,11 @@ import { useState } from 'react'
 import StatusBadge from '../components/StatusBadge'
 
 const mockData = [
-  { indicatorId: 1, indicatorValue: 'user1@gmail.com', indicatorType: 'EMAIL', sourceName: 'BreachForums', actionStatus: 'OPEN', parsedId: 101, date: '2026-03-17', leakTitle: 'Gmail 계정 대량 유출 2026' },
-  { indicatorId: 2, indicatorValue: 'user2@naver.com', indicatorType: 'EMAIL', sourceName: 'RaidForums', actionStatus: 'OPEN', parsedId: 102, date: '2026-03-17', leakTitle: '네이버 로그인 정보 유출' },
-  { indicatorId: 3, indicatorValue: 'user3@kakao.com', indicatorType: 'EMAIL', sourceName: 'Telegram', actionStatus: 'RESOLVED', parsedId: 103, date: '2026-03-16', leakTitle: '카카오 계정 유출 건' },
-  { indicatorId: 4, indicatorValue: 'admin@samsung.com', indicatorType: 'EMAIL', sourceName: 'BreachForums', actionStatus: 'OPEN', parsedId: 104, date: '2026-03-16', leakTitle: '삼성 임직원 계정 유출' },
-  { indicatorId: 5, indicatorValue: 'user5@naver.com', indicatorType: 'ID', sourceName: 'RaidForums', actionStatus: 'RESOLVED', parsedId: 105, date: '2026-03-15', leakTitle: '네이버 ID 리스트 유출' },
+  { indicatorId: 1, indicatorValue: 'user1@gmail.com', indicatorType: 'EMAIL', sourceName: 'BreachForums', actionStatus: 'OPEN', parsedId: 101, detectedAt: '2026-03-17', leakTitle: 'Gmail 계정 대량 유출 2026' },
+  { indicatorId: 2, indicatorValue: 'user2@naver.com', indicatorType: 'EMAIL', sourceName: 'RaidForums', actionStatus: 'OPEN', parsedId: 102, detectedAt: '2026-03-17', leakTitle: '네이버 로그인 정보 유출' },
+  { indicatorId: 3, indicatorValue: 'user3@kakao.com', indicatorType: 'EMAIL', sourceName: 'Telegram', actionStatus: 'RESOLVED', parsedId: 103, detectedAt: '2026-03-16', leakTitle: '카카오 계정 유출 건' },
+  { indicatorId: 4, indicatorValue: 'admin@samsung.com', indicatorType: 'EMAIL', sourceName: 'BreachForums', actionStatus: 'OPEN', parsedId: 104, detectedAt: '2026-03-16', leakTitle: '삼성 임직원 계정 유출' },
+  { indicatorId: 5, indicatorValue: 'user5@naver.com', indicatorType: 'ID', sourceName: 'RaidForums', actionStatus: 'RESOLVED', parsedId: 105, detectedAt: '2026-03-15', leakTitle: '네이버 ID 리스트 유출' },
 ]
 
 function ThreatSearch() {
@@ -34,7 +34,7 @@ function ThreatSearch() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: '24px', fontSize: '24px' }}>🔍 위협 검색 및 대응</h1>
+      <h1 style={{ marginBottom: '24px', fontSize: '24px' }}>위협 검색 및 대응</h1>
 
       <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
         <input
@@ -78,7 +78,7 @@ function ThreatSearch() {
                 <td style={{ padding: '14px 16px', fontSize: '14px' }}>{item.indicatorValue}</td>
                 <td style={{ padding: '14px 16px' }}><StatusBadge status={item.indicatorType} /></td>
                 <td style={{ padding: '14px 16px', fontSize: '14px', color: '#8b949e' }}>{item.sourceName}</td>
-                <td style={{ padding: '14px 16px', fontSize: '14px', color: '#8b949e' }}>{item.date}</td>
+                <td style={{ padding: '14px 16px', fontSize: '14px', color: '#8b949e' }}>{item.detectedAt}</td>
                 <td style={{ padding: '14px 16px' }}><StatusBadge status={item.actionStatus} /></td>
                 <td style={{ padding: '14px 16px' }}>
                   {item.actionStatus === 'OPEN' && (
@@ -88,7 +88,7 @@ function ThreatSearch() {
                     }}>조치</button>
                   )}
                   {item.actionStatus === 'RESOLVED' && item.actionNote && (
-                    <span style={{ fontSize: '12px', color: '#8b949e' }}>📝 {item.actionNote}</span>
+                    <span style={{ fontSize: '12px', color: '#8b949e' }}>{item.actionNote}</span>
                   )}
                 </td>
               </tr>
@@ -117,7 +117,7 @@ function ThreatSearch() {
             background: '#161b22', border: '1px solid #30363d',
             borderRadius: '12px', padding: '32px', width: '480px',
           }}>
-            <h3 style={{ marginBottom: '8px', fontSize: '18px' }}>⚠️ 위협 조치</h3>
+            <h3 style={{ marginBottom: '8px', fontSize: '18px' }}>위협 조치</h3>
             <p style={{ color: '#58a6ff', fontSize: '13px', marginBottom: '4px' }}>{modal.leakTitle}</p>
             <p style={{ color: '#8b949e', fontSize: '14px', marginBottom: '24px' }}>
               {modal.indicatorValue} ({modal.sourceName})

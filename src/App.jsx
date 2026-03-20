@@ -17,9 +17,9 @@ function App() {
               <div className="logo">
                 <img src={logo} alt="DeepRadar" style={{ width: '100px', objectFit: 'contain' }} />
               </div>
-              <NavLink to="/" end className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>📊 대시보드</NavLink>
-              <NavLink to="/search" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>🔍 위협 검색</NavLink>
-              <NavLink to="/settings" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>⚙️ 시스템 설정</NavLink>
+              <NavLink to="/" end className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>대시보드</NavLink>
+              <NavLink to="/search" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>위협 검색</NavLink>
+              <NavLink to="/settings" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>시스템 설정</NavLink>
             </nav>
             <main className="main-content">
               <Routes>
