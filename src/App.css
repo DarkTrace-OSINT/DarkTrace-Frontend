@@ -3,19 +3,16 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 body {
   background-color: #0d1117;
   color: #e6edf3;
   font-family: 'Segoe UI', sans-serif;
 }
-
 .app {
   display: flex;
   height: 100vh;
   overflow: hidden;
 }
-
 .sidebar {
   width: 220px;
   background-color: #161b22;
@@ -27,15 +24,14 @@ body {
   position: fixed;
   height: 100vh;
 }
-
 .logo {
   font-size: 20px;
   font-weight: bold;
   color: #58a6ff;
   margin-bottom: 24px;
   padding-left: 8px;
+  padding-top: 4px;
 }
-
 .nav-item {
   padding: 10px 16px;
   border-radius: 8px;
@@ -44,20 +40,17 @@ body {
   font-size: 14px;
   transition: all 0.2s;
 }
-
 .nav-item:hover {
   background-color: #21262d;
   color: #e6edf3;
 }
-
 .nav-item.active {
   background-color: #1f6feb;
   color: #ffffff;
 }
-
 .main-content {
   margin-left: 220px;
-  padding: 32px;
+  padding: 18px 32px 32px 32px;
   width: calc(100% - 220px);
   overflow-y: auto;
   height: 100vh;
