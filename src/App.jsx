@@ -15,7 +15,7 @@ function App() {
           <div className="app">
             <nav className="sidebar">
               <div className="logo">
-                <img src={logo} alt="DeepRadar" style={{ width: '160px', objectFit: 'contain' }} />
+                <img src={logo} alt="DeepRadar" style={{ width: '100px', objectFit: 'contain' }} />
               </div>
               <NavLink to="/" end className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>📊 대시보드</NavLink>
               <NavLink to="/search" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>🔍 위협 검색</NavLink>
