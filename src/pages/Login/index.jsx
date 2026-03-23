@@ -1,6 +1,49 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { saveToken, getToken } from '../../api/auth'
 import logo from '../../assets/logo.png'
 
 export default function LoginPage() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // 이미 로그인된 경우 대시보드로 이동
+    if (getToken()) {
+      navigate('/dashboard')
+    }
+
+    // 구글 OAuth 콜백 처리 (URL에 code 파라미터 있을 때)
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get('code')
+
+    if (code) {
+      handleOAuthCallback(code)
+    }
+  }, [])
+
+  const handleOAuthCallback = async (code) => {
+    try {
+      const response = await fetch('http://3.38.108.191:8080/api/v1/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      })
+      const data = await response.json()
+
+      if (data.accessToken) {
+        saveToken(data.accessToken)
+        navigate('/dashboard')
+      }
+    } catch (error) {
+      console.error('로그인 실패:', error)
+    }
+  }
+
+  const handleGoogleLogin = () => {
+    // 백엔드에서 구글 OAuth URL로 리다이렉트
+    window.location.href = 'http://3.38.108.191:8080/oauth2/authorization/google'
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: '#000000', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff' }}>
       <div style={{ width: '100%', maxWidth: '448px', padding: '32px', borderRadius: '16px', boxShadow: '0 25px 50px rgba(0,0,0,0.5)', background: '#18181b' }}>
@@ -17,7 +60,7 @@ export default function LoginPage() {
 
         {/* Google Login Button */}
         <button
-          onClick={() => alert('백엔드 연동 후 활성화됩니다')}
+          onClick={handleGoogleLogin}
           style={{
             width: '100%', height: '48px', background: '#ffffff',
             color: '#000000', fontWeight: '600', borderRadius: '8px',

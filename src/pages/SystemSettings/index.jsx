@@ -1,33 +1,45 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import StatusBadge from '../../components/StatusBadge'
 import Toggle from '../../components/Toggle'
 import Tag from '../../components/Tag'
-
-const mockEngines = [
-  { siteId: 1, sourceName: 'BreachForums', crawlerStatus: 'ALIVE', lastCrawledAt: '2026-03-18 15:30:00' },
-  { siteId: 2, sourceName: 'RaidForums', crawlerStatus: 'ALIVE', lastCrawledAt: '2026-03-18 15:25:00' },
-  { siteId: 3, sourceName: 'StealerLog', crawlerStatus: 'DEAD', lastCrawledAt: '2026-03-18 12:00:00' },
-]
-
-const mockSettings = {
-  settingId: 1,
-  telegramBotToken: '',
-  telegramChatId: '',
-  isAlertActive: true,
-  keywords: ['naver.com', 'gmail.com', 'kakao.com'],
-}
+import { getEngineStatus, updateSystemSettings } from '../../api/system'
 
 function SystemSettings() {
-  const [telegramBotToken, setTelegramBotToken] = useState(mockSettings.telegramBotToken)
-  const [telegramChatId, setTelegramChatId] = useState(mockSettings.telegramChatId)
-  const [isAlertActive, setIsAlertActive] = useState(mockSettings.isAlertActive)
+  const [engines, setEngines] = useState([])
+  const [telegramBotToken, setTelegramBotToken] = useState('')
+  const [telegramChatId, setTelegramChatId] = useState('')
+  const [isAlertActive, setIsAlertActive] = useState(true)
   const [keyword, setKeyword] = useState('')
-  const [keywords, setKeywords] = useState(mockSettings.keywords)
+  const [keywords, setKeywords] = useState([])
   const [saved, setSaved] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  const handleSave = () => {
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+  useEffect(() => {
+    const fetchEngines = async () => {
+      try {
+        const response = await getEngineStatus()
+        setEngines(response.data?.engines || [])
+      } catch (error) {
+        console.error('엔진 상태 로딩 실패:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchEngines()
+  }, [])
+
+  const handleSave = async () => {
+    try {
+      await updateSystemSettings({
+        telegramBotToken,
+        telegramChatId,
+        keywords,
+      })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (error) {
+      console.error('설정 저장 실패:', error)
+    }
   }
 
   const handleAddKeyword = () => {
@@ -44,21 +56,27 @@ function SystemSettings() {
       {/* 엔진 상태 (API 6) */}
       <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
         <h3 style={{ marginBottom: '16px', color: '#8b949e' }}>엔진 상태 모니터링</h3>
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-          {mockEngines.map(engine => (
-            <div key={engine.siteId} style={{
-              background: '#0d1117',
-              border: `1px solid ${engine.crawlerStatus === 'ALIVE' ? '#52c41a' : '#ff4d4f'}`,
-              borderRadius: '8px', padding: '16px 24px',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <span style={{ fontSize: '14px', fontWeight: 'bold' }}>{engine.sourceName}</span>
-                <StatusBadge status={engine.crawlerStatus} />
+        {loading ? (
+          <div style={{ color: '#8b949e' }}>로딩 중...</div>
+        ) : engines.length === 0 ? (
+          <div style={{ color: '#8b949e' }}>엔진 데이터 없음</div>
+        ) : (
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+            {engines.map(engine => (
+              <div key={engine.siteId} style={{
+                background: '#0d1117',
+                border: `1px solid ${engine.crawlerStatus === 'ALIVE' ? '#52c41a' : '#ff4d4f'}`,
+                borderRadius: '8px', padding: '16px 24px',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 'bold' }}>{engine.sourceName}</span>
+                  <StatusBadge status={engine.crawlerStatus} />
+                </div>
+                <div style={{ fontSize: '11px', color: '#8b949e' }}>마지막 수집: {engine.lastCrawledAt || '-'}</div>
               </div>
-              <div style={{ fontSize: '11px', color: '#8b949e' }}>마지막 수집: {engine.lastCrawledAt}</div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 텔레그램 설정 (API 7) */}
@@ -103,10 +121,7 @@ function SystemSettings() {
             placeholder="키워드 추가... (Enter 또는 추가 버튼)"
             style={{ flex: 1, padding: '10px 14px', background: '#0d1117', border: '1px solid #30363d', borderRadius: '8px', color: '#e6edf3', fontSize: '14px', outline: 'none' }}
           />
-          <button onClick={handleAddKeyword} style={{
-            background: '#1f6feb', color: '#fff', border: 'none',
-            padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px',
-          }}>추가</button>
+          <button onClick={handleAddKeyword} style={{ background: '#1f6feb', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}>추가</button>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
           {keywords.map(kw => (
