@@ -70,7 +70,7 @@ function SystemSettings() {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <span style={{ fontSize: '14px', fontWeight: 'bold' }}>{engine.sourceName}</span>
-                  <StatusBadge status={engine.crawlerStatus} />
+                  <StatusBadge status={engine.crawlerStatus || 'DEAD'} />
                 </div>
                 <div style={{ fontSize: '11px', color: '#8b949e' }}>마지막 수집: {engine.lastCrawledAt || '-'}</div>
               </div>

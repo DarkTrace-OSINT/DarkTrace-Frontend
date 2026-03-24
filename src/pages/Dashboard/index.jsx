@@ -40,7 +40,7 @@ function Dashboard() {
         const stats = await getDashboardStats()
         setStatsData(stats.data)
         // TODO: 백엔드 dailyStats 추가되면 아래 주석 해제
-        // setDailyData(stats.data.dailyStats)
+       // setDailyData(stats.data.dailyStats || [])
 
         const recent = await getRecentThreats()
         setRecentData(recent.data)

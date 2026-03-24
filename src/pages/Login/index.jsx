@@ -7,12 +7,10 @@ export default function LoginPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // 이미 로그인된 경우 대시보드로 이동
     if (getToken()) {
       navigate('/dashboard')
     }
 
-    // 구글 OAuth 콜백 처리 (URL에 code 파라미터 있을 때)
     const params = new URLSearchParams(window.location.search)
     const code = params.get('code')
 
@@ -23,11 +21,17 @@ export default function LoginPage() {
 
   const handleOAuthCallback = async (code) => {
     try {
-      const response = await fetch('http://3.38.108.191:8080/api/v1/auth/google', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code }),
-      })
+      const response = await fetch(
+        'https://unpercipient-woodrow-nonrecurent.ngrok-free.dev/api/v1/auth/google',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420'
+          },
+          body: JSON.stringify({ code }),
+        }
+      )
       const data = await response.json()
 
       if (data.accessToken) {
@@ -40,8 +44,7 @@ export default function LoginPage() {
   }
 
   const handleGoogleLogin = () => {
-    // 백엔드에서 구글 OAuth URL로 리다이렉트
-    window.location.href = 'http://3.38.108.191:8080/oauth2/authorization/google'
+    window.location.href = 'https://unpercipient-woodrow-nonrecurent.ngrok-free.dev/oauth2/authorization/google'
   }
 
   return (
