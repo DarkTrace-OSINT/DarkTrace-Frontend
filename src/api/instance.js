@@ -2,8 +2,11 @@ import axios from 'axios'
 import { getToken } from './auth'
 
 const instance = axios.create({
-  baseURL: 'http://3.38.108.191:8080',
+  baseURL: 'https://unpercipient-woodrow-nonrecurent.ngrok-free.dev',
   timeout: 10000,
+  headers: {
+    'ngrok-skip-browser-warning': '69420'
+  }
 })
 
 // 모든 요청에 JWT 토큰 자동 첨부
