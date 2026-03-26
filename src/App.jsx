@@ -4,7 +4,7 @@ import Dashboard from './pages/Dashboard'
 import ThreatSearch from './pages/ThreatSearch'
 import SystemSettings from './pages/SystemSettings'
 import Login from './pages/Login'
-import { getToken, saveToken } from './api/auth'
+import { getToken, saveToken, removeToken } from './api/auth'
 import logo from './assets/logo.png'
 import './styles/App.css'
 
@@ -27,6 +27,11 @@ function App() {
 
   if (!ready) return null
 
+  const handleLogout = () => {
+    removeToken()
+    window.location.href = '/login'
+  }
+
   return (
     <BrowserRouter>
       <Routes>
@@ -42,6 +47,22 @@ function App() {
                 <NavLink to="/dashboard" end className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>대시보드</NavLink>
                 <NavLink to="/search" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>위협 검색</NavLink>
                 <NavLink to="/settings" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>시스템 설정</NavLink>
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    marginTop: 'auto',
+                    background: 'transparent',
+                    border: '1px solid #30363d',
+                    color: '#8b949e',
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    width: '100%',
+                  }}
+                >
+                  로그아웃
+                </button>
               </nav>
               <main className="main-content">
                 <Routes>
