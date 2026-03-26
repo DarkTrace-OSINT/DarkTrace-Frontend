@@ -1,9 +1,10 @@
+import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import ThreatSearch from './pages/ThreatSearch'
 import SystemSettings from './pages/SystemSettings'
 import Login from './pages/Login'
-import { getToken } from './api/auth'
+import { getToken, saveToken } from './api/auth'
 import logo from './assets/logo.png'
 import './styles/App.css'
 
@@ -12,6 +13,20 @@ function PrivateRoute({ children }) {
 }
 
 function App() {
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const token = params.get('token')
+    if (token) {
+      saveToken(token)
+      window.history.replaceState({}, document.title, '/dashboard')
+    }
+    setReady(true)
+  }, [])
+
+  if (!ready) return null
+
   return (
     <BrowserRouter>
       <Routes>

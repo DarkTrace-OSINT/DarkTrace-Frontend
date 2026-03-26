@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { saveToken, getToken } from '../../api/auth'
+import { getToken } from '../../api/auth'
 import logo from '../../assets/logo.png'
 
 export default function LoginPage() {
@@ -10,38 +10,7 @@ export default function LoginPage() {
     if (getToken()) {
       navigate('/dashboard')
     }
-
-    const params = new URLSearchParams(window.location.search)
-    const code = params.get('code')
-
-    if (code) {
-      handleOAuthCallback(code)
-    }
-  }, [])
-
-  const handleOAuthCallback = async (code) => {
-    try {
-      const response = await fetch(
-        'https://unpercipient-woodrow-nonrecurent.ngrok-free.dev/api/v1/auth/google',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': '69420'
-          },
-          body: JSON.stringify({ code }),
-        }
-      )
-      const data = await response.json()
-
-      if (data.accessToken) {
-        saveToken(data.accessToken)
-        navigate('/dashboard')
-      }
-    } catch (error) {
-      console.error('로그인 실패:', error)
-    }
-  }
+  }, [navigate])
 
   const handleGoogleLogin = () => {
     window.location.href = 'https://unpercipient-woodrow-nonrecurent.ngrok-free.dev/oauth2/authorization/google'
@@ -50,18 +19,12 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#000000', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff' }}>
       <div style={{ width: '100%', maxWidth: '448px', padding: '32px', borderRadius: '16px', boxShadow: '0 25px 50px rgba(0,0,0,0.5)', background: '#18181b' }}>
-
-        {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
           <img src={logo} alt="DeepRadar" style={{ width: '160px', margin: '0 auto' }} />
         </div>
-
-        {/* Description */}
         <p style={{ fontSize: '14px', color: '#9ca3af', textAlign: 'center', marginBottom: '24px' }}>
           다크웹 유출 여부를 실시간으로 확인하세요
         </p>
-
-        {/* Google Login Button */}
         <button
           onClick={handleGoogleLogin}
           style={{
@@ -74,31 +37,6 @@ export default function LoginPage() {
           <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="google" style={{ width: '20px', height: '20px' }} />
           Google로 시작하기
         </button>
-
-        {/* Divider */}
-        <div style={{ display: 'flex', alignItems: 'center', margin: '24px 0' }}>
-          <div style={{ flex: 1, height: '1px', background: '#374151' }} />
-          <span style={{ padding: '0 12px', fontSize: '12px', color: '#6b7280' }}>안내</span>
-          <div style={{ flex: 1, height: '1px', background: '#374151' }} />
-        </div>
-
-        {/* Info */}
-        <p style={{ fontSize: '12px', color: '#6b7280', textAlign: 'center', marginBottom: '16px' }}>
-          현재 Google 계정으로만 로그인 가능합니다
-        </p>
-
-        {/* Security Notice */}
-        <div style={{ fontSize: '12px', color: '#9ca3af', textAlign: 'center', lineHeight: '1.8' }}>
-          <p>안전한 OAuth 2.0 인증 사용</p>
-          <p>이메일 정보만 사용됩니다</p>
-        </div>
-
-        {/* Footer */}
-        <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '12px', color: '#4b5563' }}>
-          <a href="#" style={{ color: '#4b5563' }}>이용약관</a>
-          <span style={{ margin: '0 8px' }}>|</span>
-          <a href="#" style={{ color: '#4b5563' }}>개인정보처리방침</a>
-        </div>
       </div>
     </div>
   )
