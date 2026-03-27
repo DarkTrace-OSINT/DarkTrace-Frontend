@@ -54,22 +54,20 @@ function ThreatSearch() {
   }
 
   const handleActionConfirm = async () => {
-    try {
-      console.log('modal 전체:', modal)
-      console.log('parsedId:', modal?.parsedId)
-      await updateThreatAction({
-        parsedId: modal.parsedId,
-        adminId: 1,
-        actionStatus: 'RESOLVED',
-        actionNote,
-      })
-      await fetchData(currentPage)
-      setModal(null)
-      setActionNote('')
-    } catch (error) {
-      console.error('조치 처리 실패:', error)
-    }
+  try {
+    await updateThreatAction({
+      parsedId: modal.indicatorId,
+      adminId: 1,
+      actionStatus: 'RESOLVED',
+      actionNote,
+    })
+    await fetchData(currentPage)
+    setModal(null)
+    setActionNote('')
+  } catch (error) {
+    console.error('조치 처리 실패:', error)
   }
+}
 
    const pageGroupSize = 10
    const currentGroup = Math.floor(currentPage / pageGroupSize)
