@@ -15,14 +15,14 @@ function ThreatSearch() {
 
   const fetchData = async (page = 0, showLoading = true) => {
     try {
-     if (showLoading) setLoading(true)
+      if (showLoading) setLoading(true)
       const params = {
         page,
         size: 10,
         ...(search && { keyword: search }),
         ...(indicatorType !== 'ALL' && { indicatorType }),
         ...(statusFilter !== 'ALL' && { actionStatus: statusFilter }),
-     }
+      }
       const response = await searchThreats(params)
       setData(response.data?.content || [])
       setTotalPages(response.data?.totalPages || 0)
@@ -32,7 +32,6 @@ function ThreatSearch() {
       setLoading(false)
     }
   }
-
 
   useEffect(() => {
     fetchData()
@@ -54,26 +53,27 @@ function ThreatSearch() {
   }
 
   const handleActionConfirm = async () => {
-  try {
-    await updateThreatAction({
-      parsedId: modal.indicatorId,
-      adminId: 1,
-      actionStatus: 'RESOLVED',
-      actionNote,
-    })
-    await fetchData(currentPage)
-    setModal(null)
-    setActionNote('')
-  } catch (error) {
-    console.error('조치 처리 실패:', error)
+    try {
+      console.log('modal 전체:', modal)
+      console.log('parsedId:', modal?.parsedId)
+      await updateThreatAction({
+        parsedId: modal.indicatorId,
+        adminId: 1,
+        actionStatus: 'RESOLVED',
+        actionNote,
+      })
+      await fetchData(currentPage)
+      setModal(null)
+      setActionNote('')
+    } catch (error) {
+      console.error('조치 처리 실패:', error)
+    }
   }
-}
 
-   const pageGroupSize = 10
-   const currentGroup = Math.floor(currentPage / pageGroupSize)
-   const startPage = currentGroup * pageGroupSize
-   const endPage = Math.min(startPage + pageGroupSize, totalPages)
-
+  const pageGroupSize = 10
+  const currentGroup = Math.floor(currentPage / pageGroupSize)
+  const startPage = currentGroup * pageGroupSize
+  const endPage = Math.min(startPage + pageGroupSize, totalPages)
 
   const btnStyle = (active) => ({
     padding: '8px 14px', borderRadius: '6px',
@@ -178,7 +178,7 @@ function ThreatSearch() {
             <h3 style={{ marginBottom: '8px', fontSize: '18px' }}>위협 조치</h3>
             <p style={{ color: '#58a6ff', fontSize: '13px', marginBottom: '4px' }}>{modal.leakTitle}</p>
             <p style={{ color: '#8b949e', fontSize: '14px', marginBottom: '24px' }}>{modal.indicatorValue} ({modal.sourceName})</p>
-            <label style={{ fontSize: '13px', color: '#8b949e', display: 'block', marginBottom: '8px' }}>조치 메모</label>
+            <label style={{ fontSize: '13px', color: '#8b949e', display: 'block', marginBottom: '8px' }}>조치 메모 <span style={{ color: '#ff4d4f' }}>*</span></label>
             <textarea
               value={actionNote}
               onChange={e => setActionNote(e.target.value)}
@@ -188,7 +188,17 @@ function ThreatSearch() {
             />
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
               <button onClick={() => { setModal(null); setActionNote('') }} style={{ background: '#21262d', color: '#e6edf3', border: '1px solid #30363d', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}>취소</button>
-              <button onClick={handleActionConfirm} style={{ background: '#52c41a', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' }}>조치 완료</button>
+              <button
+                onClick={handleActionConfirm}
+                disabled={!actionNote.trim()}
+                style={{
+                  background: actionNote.trim() ? '#52c41a' : '#2d4a2d',
+                  color: '#fff', border: 'none',
+                  padding: '10px 20px', borderRadius: '8px',
+                  cursor: actionNote.trim() ? 'pointer' : 'default',
+                  fontSize: '14px', fontWeight: 'bold'
+                }}
+              >조치 완료</button>
             </div>
           </div>
         </div>
