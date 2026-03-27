@@ -13,16 +13,16 @@ function ThreatSearch() {
   const [modal, setModal] = useState(null)
   const [actionNote, setActionNote] = useState('')
 
-  const fetchData = async (page = 0) => {
+  const fetchData = async (page = 0, showLoading = true) => {
     try {
-      setLoading(true)
+     if (showLoading) setLoading(true)
       const params = {
         page,
         size: 10,
         ...(search && { keyword: search }),
         ...(indicatorType !== 'ALL' && { indicatorType }),
         ...(statusFilter !== 'ALL' && { actionStatus: statusFilter }),
-      }
+     }
       const response = await searchThreats(params)
       setData(response.data?.content || [])
       setTotalPages(response.data?.totalPages || 0)
@@ -32,6 +32,7 @@ function ThreatSearch() {
       setLoading(false)
     }
   }
+
 
   useEffect(() => {
     fetchData()
@@ -44,7 +45,7 @@ function ThreatSearch() {
 
   const handlePageChange = (page) => {
     setCurrentPage(page)
-    fetchData(page)
+    fetchData(page, false)
   }
 
   const openModal = (item) => {
