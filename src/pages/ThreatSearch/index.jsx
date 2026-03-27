@@ -18,7 +18,7 @@ function ThreatSearch() {
       setLoading(true)
       const params = {
         page,
-        size: 20,
+        size: 10,
         ...(search && { keyword: search }),
         ...(indicatorType !== 'ALL' && { indicatorType }),
         ...(statusFilter !== 'ALL' && { actionStatus: statusFilter }),
@@ -42,8 +42,20 @@ function ThreatSearch() {
     fetchData(0)
   }
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+    fetchData(page)
+  }
+
+  const openModal = (item) => {
+    console.log('모달 원본 item:', item)
+    setModal(item)
+  }
+
   const handleActionConfirm = async () => {
     try {
+      console.log('modal 전체:', modal)
+      console.log('parsedId:', modal?.parsedId)
       await updateThreatAction({
         parsedId: modal.parsedId,
         adminId: 1,
@@ -57,6 +69,25 @@ function ThreatSearch() {
       console.error('조치 처리 실패:', error)
     }
   }
+
+   const pageGroupSize = 10
+   const currentGroup = Math.floor(currentPage / pageGroupSize)
+   const startPage = currentGroup * pageGroupSize
+   const endPage = Math.min(startPage + pageGroupSize, totalPages)
+
+
+  const btnStyle = (active) => ({
+    padding: '8px 14px', borderRadius: '6px',
+    background: active ? '#1f6feb' : '#161b22',
+    color: '#e6edf3', border: '1px solid #30363d',
+    cursor: 'pointer', fontSize: '14px',
+  })
+
+  const navBtnStyle = (disabled) => ({
+    padding: '8px 14px', borderRadius: '6px',
+    background: '#161b22', color: disabled ? '#444' : '#e6edf3',
+    border: '1px solid #30363d', cursor: disabled ? 'default' : 'pointer', fontSize: '14px',
+  })
 
   return (
     <div>
@@ -114,7 +145,7 @@ function ThreatSearch() {
                     <td style={{ padding: '14px 16px' }}><StatusBadge status={item.actionStatus} /></td>
                     <td style={{ padding: '14px 16px' }}>
                       {item.actionStatus === 'OPEN' && (
-                        <button onClick={() => setModal(item)} style={{ background: '#1f6feb', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>조치</button>
+                        <button onClick={() => openModal(item)} style={{ background: '#1f6feb', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>조치</button>
                       )}
                       {item.actionStatus === 'RESOLVED' && item.actionNote && (
                         <span style={{ fontSize: '12px', color: '#8b949e' }}>{item.actionNote}</span>
@@ -130,14 +161,14 @@ function ThreatSearch() {
 
       {/* 페이지네이션 */}
       {totalPages > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '24px' }}>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button key={i} onClick={() => { setCurrentPage(i); fetchData(i) }} style={{
-              padding: '8px 14px', borderRadius: '6px',
-              background: currentPage === i ? '#1f6feb' : '#161b22',
-              color: '#e6edf3', border: '1px solid #30363d', cursor: 'pointer',
-            }}>{i + 1}</button>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginTop: '24px', alignItems: 'center' }}>
+          <button onClick={() => handlePageChange(0)} disabled={currentPage === 0} style={navBtnStyle(currentPage === 0)}>{'«'}</button>
+          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0} style={navBtnStyle(currentPage === 0)}>{'‹'}</button>
+          {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map(i => (
+            <button key={i} onClick={() => handlePageChange(i)} style={btnStyle(currentPage === i)}>{i + 1}</button>
           ))}
+          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages - 1} style={navBtnStyle(currentPage === totalPages - 1)}>{'›'}</button>
+          <button onClick={() => handlePageChange(totalPages - 1)} disabled={currentPage === totalPages - 1} style={navBtnStyle(currentPage === totalPages - 1)}>{'»'}</button>
         </div>
       )}
 
