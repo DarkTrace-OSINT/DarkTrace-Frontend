@@ -40,10 +40,14 @@ function Dashboard() {
         const stats = await getDashboardStats()
         setStatsData(stats.data)
         if (stats.data.dailyStats && stats.data.dailyStats.length > 0) {
-          setDailyData(stats.data.dailyStats)
-        } else {
-          setDailyData(getLast7Days())
-        }
+           setDailyData(stats.data.dailyStats.map(d => ({
+           name: d.date,
+           day: '',
+           count: d.count
+  })))
+} else {
+  setDailyData(getLast7Days())
+}
         const recent = await getRecentThreats()
         setRecentData(recent.data)
       } catch (error) {
