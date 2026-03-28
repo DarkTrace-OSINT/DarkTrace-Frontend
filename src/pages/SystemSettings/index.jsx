@@ -33,6 +33,7 @@ function SystemSettings() {
       await updateSystemSettings({
         telegramBotToken,
         telegramChatId,
+        isAlertEnabled: isAlertActive,
         keywords,
       })
       setSaved(true)
