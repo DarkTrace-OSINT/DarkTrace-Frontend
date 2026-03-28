@@ -1,20 +1,21 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getToken } from '../../api/auth';
-import logo from '../../assets/logo.png'; // 기존 로고 이미지 사용 시
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { getToken } from '../../api/auth'
+import logo from '../../assets/logo.png'
+
 export default function LoginPage() {
-  const navigate = useNavigate();
-  // 1. 기존 기능 유지: 토큰이 있으면 대시보드로 리다이렉트
+  const navigate = useNavigate()
+
   useEffect(() => {
     if (getToken()) {
-      navigate('/dashboard');
+      navigate('/dashboard')
     }
-  }, [navigate]);
-  // 2. 기존 기능 유지: 구글 로그인 처리
+  }, [navigate])
+
   const handleGoogleLogin = () => {
-    window.location.href =
-      'https://unpercipient-woodrow-nonrecurent.ngrok-free.dev/oauth2/authorization/google';
-  };
+    window.location.href = 'https://unpercipient-woodrow-nonrecurent.ngrok-free.dev/oauth2/authorization/google'
+  }
+
   return (
     <div style={{ 
       minHeight: '100vh', 
@@ -35,17 +36,16 @@ export default function LoginPage() {
         boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)' 
       }}>
         
-        {/* Logo Section */}
+        {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '12px' }}>
-          <div style={{ fontSize: '32px', fontWeight: '800', letterSpacing: '-1px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: '#ffffff' }}>Deep</span>
-            <span style={{ color: '#3b82f6' }}>Radar</span>
-          </div>
+          <img src={logo} alt="DeepRadar" style={{ width: '160px', margin: '0 auto' }} />
         </div>
+
         {/* Description */}
         <p style={{ fontSize: '15px', color: '#a1a1aa', textAlign: 'center', marginBottom: '32px', lineHeight: '1.5' }}>
           다크웹 유출 여부를 실시간으로 확인하세요
         </p>
+
         {/* Google Login Button */}
         <button
           onClick={handleGoogleLogin}
@@ -78,10 +78,12 @@ export default function LoginPage() {
           <span style={{ fontSize: '12px', color: '#52525b', fontWeight: '500' }}>안내</span>
           <div style={{ flex: 1, height: '1px', background: '#27272a' }}></div>
         </div>
+
         {/* Info */}
         <p style={{ fontSize: '13px', color: '#71717a', textAlign: 'center', marginBottom: '24px' }}>
           현재 Google 계정으로만 로그인 가능합니다
         </p>
+
         {/* Security Notice */}
         <div style={{ 
           background: '#27272a44', 
@@ -101,6 +103,7 @@ export default function LoginPage() {
             <span style={{ color: '#10b981' }}>✓</span> 이메일 정보만 사용됩니다
           </div>
         </div>
+
         {/* Footer */}
         <div style={{ 
           display: 'flex', 
@@ -116,5 +119,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
