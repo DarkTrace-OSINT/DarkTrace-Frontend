@@ -40,15 +40,18 @@ function Dashboard() {
         const stats = await getDashboardStats()
         setStatsData(stats.data)
         if (stats.data.dailyStats && stats.data.dailyStats.length > 0) {
-            const last7Days = getLast7Days()
-            const merged = last7Days.map(day => {
-            const found = stats.data.dailyStats.find(d => d.date === day.name)
+          const last7Days = getLast7Days()
+          const merged = last7Days.map(day => {
+            const found = stats.data.dailyStats.find(d => {
+              const normalized = d.date.replace(/^0/, '').replace('/0', '/')
+              return normalized === day.name
+            })
             return found ? { ...day, count: found.count } : day
-         })
-       setDailyData(merged)
+          })
+          setDailyData(merged)
         } else {
-       setDailyData(getLast7Days())
-}
+          setDailyData(getLast7Days())
+        }
         const recent = await getRecentThreats()
         setRecentData(recent.data)
       } catch (error) {
