@@ -12,7 +12,7 @@ const getLast7Days = () => {
     days.push({
       name: `${d.getMonth()+1}/${d.getDate()}`,
       day: ['일','월','화','수','목','금','토'][d.getDay()],
-      count: 0  // 백엔드 dailyStats 추가되면 실제 데이터로 교체
+      count: 0
     })
   }
   return days
@@ -39,9 +39,11 @@ function Dashboard() {
       try {
         const stats = await getDashboardStats()
         setStatsData(stats.data)
-        // TODO: 백엔드 dailyStats 추가되면 아래 주석 해제
-       // setDailyData(stats.data.dailyStats || [])
-
+        if (stats.data.dailyStats && stats.data.dailyStats.length > 0) {
+          setDailyData(stats.data.dailyStats)
+        } else {
+          setDailyData(getLast7Days())
+        }
         const recent = await getRecentThreats()
         setRecentData(recent.data)
       } catch (error) {
