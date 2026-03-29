@@ -57,7 +57,7 @@ function ThreatSearch() {
       console.log('modal 전체:', modal)
       console.log('parsedId:', modal?.parsedId)
       await updateThreatAction({
-        parsedId: modal.indicatorId,
+        parseId: modal.indicatorId,
         adminId: 1,
         actionStatus: 'RESOLVED',
         actionNote,
