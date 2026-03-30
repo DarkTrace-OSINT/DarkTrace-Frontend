@@ -29,46 +29,26 @@ function ThreatSearch() {
 
 
   const fetchData = async (page = 0, showLoading = true) => {
+  try {
+    if (showLoading) setLoading(true)
 
-    try {
-
-      if (showLoading) setLoading(true)
-
-      // Fix 1: Enum 대문자 변환 로직 (백엔드 500 에러 방지)
-
-      const params = {
-
-        page,
-
-        size: 10,
-
-        keyword: search || "",
-
-        ...(indicatorType !== 'ALL' && { indicatorType: indicatorType.toUpperCase() }),
-
-        ...(statusFilter !== 'ALL' && { actionStatus: statusFilter.toUpperCase() }),
-
-      }
-
-      const response = await searchThreats(params)
-
-      // Fix 2: 백엔드 DTO 명세서 content 필드 매핑
-
-      setData(response.data?.content || [])
-
-      setTotalPages(response.data?.totalPages || 0)
-
-    } catch (error) {
-
-      console.error('위협 데이터 로딩 실패:', error)
-
-    } finally {
-
-      setLoading(false)
-
+    const params = {
+      page,
+      size: 10,
+      keyword: search  "",
+      ...(indicatorType !== 'ALL' && { indicatorType: indicatorType.toUpperCase() }),
+      ...(statusFilter !== 'ALL' && { actionStatus: statusFilter.toUpperCase() }),
     }
+    const response = await searchThreats(params)
 
-  }
+      setData(response.content  [])
+      setTotalPages(response.totalPages || 0)
+    } catch (error) {
+      console.error('위협 데이터 로딩 실패:', error)
+    } finally {
+      setLoading(false)
+    }
+    }
 
 
 
